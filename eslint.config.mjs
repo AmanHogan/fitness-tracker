@@ -1,18 +1,32 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals";
-import nextTs from "eslint-config-next/typescript";
+// @ts-check
+import eslint from "@eslint/js"
+import { defineConfig } from "eslint/config"
+import tseslint from "typescript-eslint"
 
-const eslintConfig = defineConfig([
-  ...nextVitals,
-  ...nextTs,
-  // Override default ignores of eslint-config-next.
-  globalIgnores([
-    // Default ignores of eslint-config-next:
-    ".next/**",
-    "out/**",
-    "build/**",
-    "next-env.d.ts",
-  ]),
-]);
+export default defineConfig(
+  // 🚫 ignore component library (shadcn, generated UI, etc.)
+  {
+    ignores: ["**/components/**"],
+  },
 
-export default eslintConfig;
+  eslint.configs.recommended,
+
+  ...tseslint.configs.strict,
+  ...tseslint.configs.stylistic,
+
+  {
+    rules: {
+      "@typescript-eslint/no-explicit-any": "error",
+
+      "@typescript-eslint/explicit-function-return-type": [
+        "error",
+        {
+          allowExpressions: false,
+          allowTypedFunctionExpressions: true,
+        },
+      ],
+
+      "@typescript-eslint/explicit-module-boundary-types": "error",
+    },
+  },
+)
